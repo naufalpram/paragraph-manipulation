@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import QuillEditor from '../components/Quill';
+import QuillEditor from './components/Quill';
 import { Delta } from 'quill/core';
 
 const App = () => {
@@ -58,57 +58,63 @@ const App = () => {
 
   return (
     <>
-      <section className='w-3/4 mt-4'>
-        <QuillEditor
-          ref={quillRef}
-          readOnly={readOnly}
-          defaultValue={new Delta()
-            .insert('Hello\n', { header: 1 })
-            .insert('Some ')
-            .insert('initial\n', { bold: true })
-            .insert(' ')
-            .insert('content', { underline: true })
-            .insert('\n')}
-          onSelectionChange={setRange}
-          onTextChange={setLastChange}
-        />
-        <div className="flex border border-[#ccc] justify-between p-3">
-          <label>
-            Read Only:{' '}
-            <input
-              type="checkbox"
-              value={readOnly}
-              onChange={(e) => setReadOnly(e.target.checked)}
-            />
-          </label>
-          <button
-            className="px-4 py-2 font-semibold text-sm text-emerald-600 bg-transparent border-1 border-emerald-600 transition-all hover:text-white hover:bg-emerald-600 rounded"
-            type="button"
-            onClick={() => {
-                const length = quillRef.current.getLength();
-                alert(quillRef.current.getSemanticHTML(0, length));
-            }}
-          >
-            Send
-          </button>
+      <main className='w-full h-screen bg-gray-400 flex items-center flex-col gap-4'>
+        <div>
+          <h1>Paragraph Manipulation</h1>
         </div>
-        <div className="mx-3 my-0">
-          <div className="text-[#999] uppercase">Current Range:</div>
-          {range ? JSON.stringify(range) : 'Empty'}
-        </div>
-        <div className="mx-3 my-0">
-          <div className="text-[#999] uppercase">Last Change:</div>
-          {lastChange ? JSON.stringify(lastChange.ops) : 'Empty'}
-        </div>
-      </section>
-      {/* <Menu quillRef={quillRef}>
-        <MenuItem id='dashes-between' label="Join with Dashes" onClick={setTextSplitWithDashes} />
-        <MenuItem id='bold-italic' label="Set as Bold Italic" onClick={setTextBoldItalic} />
-        <MenuItem label="Reload" disabled />
-        <MenuItem label="Add Comment" onClick={addCommentToSelection} />
-        <MenuItem label="Save As..." />
-        <MenuItem label="Print" />
-      </Menu> */}
+        <section className='w-3/4 mt-4'>
+          <QuillEditor
+            ref={quillRef}
+            readOnly={readOnly}
+            defaultValue={new Delta()
+              .insert('Hello\n', { header: 1 })
+              .insert('Some ')
+              .insert('initial\n', { bold: true })
+              .insert(' ')
+              .insert('content', { underline: true })
+              .insert('\n')
+            .insert('this is a long text', { background: '#FF5733' })}
+            onSelectionChange={setRange}
+            onTextChange={setLastChange}
+          />
+          <div className="flex border border-[#ccc] justify-between p-3">
+            <label>
+              Read Only:{' '}
+              <input
+                type="checkbox"
+                value={readOnly}
+                onChange={(e) => setReadOnly(e.target.checked)}
+              />
+            </label>
+            <button
+              className="px-4 py-2 font-semibold text-sm text-emerald-600 bg-transparent border-1 border-emerald-600 transition-all hover:text-white hover:bg-emerald-600 rounded"
+              type="button"
+              onClick={() => {
+                  const length = quillRef.current.getLength();
+                  alert(quillRef.current.getSemanticHTML(0, length));
+              }}
+            >
+              Send
+            </button>
+          </div>
+          <div className="mx-3 my-0">
+            <div className="text-[#999] uppercase">Current Range:</div>
+            {range ? JSON.stringify(range) : 'Empty'}
+          </div>
+          <div className="mx-3 my-0">
+            <div className="text-[#999] uppercase">Last Change:</div>
+            {lastChange ? JSON.stringify(lastChange.ops) : 'Empty'}
+          </div>
+        </section>
+        {/* <Menu quillRef={quillRef}>
+          <MenuItem id='dashes-between' label="Join with Dashes" onClick={setTextSplitWithDashes} />
+          <MenuItem id='bold-italic' label="Set as Bold Italic" onClick={setTextBoldItalic} />
+          <MenuItem label="Reload" disabled />
+          <MenuItem label="Add Comment" onClick={addCommentToSelection} />
+          <MenuItem label="Save As..." />
+          <MenuItem label="Print" />
+        </Menu> */}
+      </main>
     </>
   );
 };

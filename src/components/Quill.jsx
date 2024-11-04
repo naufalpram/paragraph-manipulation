@@ -53,7 +53,7 @@ const Editor = forwardRef(
     return (
       <div
         ref={containerRef}
-        className="bg-white text-black border border-gray-200 p-5 rounded-tr rounded-tl"
+        className="bg-white text-black border border-gray-200 p-5 rounded-tr rounded-tl w-1/2"
       ></div>
     );
   }
