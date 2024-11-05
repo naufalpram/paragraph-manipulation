@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import QuillEditor from './components/Quill';
 import { Delta } from 'quill/core';
+import Task1 from './Task1';
+import './App.css';
 
 const App = () => {
   const [range, setRange] = useState();
@@ -114,6 +116,9 @@ const App = () => {
           <MenuItem label="Save As..." />
           <MenuItem label="Print" />
         </Menu> */}
+        <section className='task-1 w-3/4 mt-4 p-4 bg-white'>
+          <Task1 />
+        </section>
       </main>
     </>
   );
