@@ -33,6 +33,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'react/display-name': 0,
+      "react/prop-types": 0,
     },
   },
 ]

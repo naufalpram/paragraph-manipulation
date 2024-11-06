@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "svgr": "svgr --ignore-existing --title-prop --svg-props width={props.size},height={props.size},fill={props.color} --no-dimensions --replace-attr-values '#70727D=currentColor,#FFF=currentColor' --filename-case kebab -d src/assets/icons src/assets/svg",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@svgr/cli": "^8.1.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",

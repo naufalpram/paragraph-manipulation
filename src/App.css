@@ -20,19 +20,22 @@
 }
 
 .task-1 {
-  p {
+  div {
     margin-bottom: 1rem;
-    
+
     &.numbered {
       counter-increment: paragraph;
-      margin-left: 2em;
       margin-bottom: 0.5rem;
-    }
-    
-    &.numbered:before {
-      content: counter(paragraph) ". ";
-      margin-left: -2em;
-      margin-right: 1em;
+
+      p {
+        margin-left: 2em;
+      }
+
+      p:before {
+        content: counter(paragraph) ". ";
+        margin-left: -2em;
+        margin-right: 1em;
+      }
     }
   }
 }

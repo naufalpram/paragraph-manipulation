@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
+import ParagraphPopover from './components/ParagraphPopover';
 
 const Task1 = () => {
-    const sentenceHighlighter = ( paragraph ) => {
+    const [isGearShows, setGearShows] = useState(false);
+    const sentenceHighlighter = (paragraph) => {
         let arrHighlighter = [];
 
         if (paragraph.highlight) {
-            paragraph.highlight.map((highlighter) => {
+            paragraph.highlight.forEach((highlighter) => {
                 let markedSentence = paragraph.text.slice(highlighter.start, highlighter.end);
                 arrHighlighter.push({ sentence: markedSentence, color: highlighter.color })
             })
@@ -18,7 +21,7 @@ const Task1 = () => {
         let arrSentence = [];
         let wordsToSlice = '';
 
-        arr.map((slicer) => {
+        arr.forEach((slicer) => {
             let tempArr = [];
             if (arrSentence.length > 0) {
                 wordsToSlice = arrSentence.pop().sentence;
@@ -38,11 +41,22 @@ const Task1 = () => {
             <h1 className='text-lg mb-4'>Task 1</h1>
             {artikelMakananFavorit.map((paragraph, idx) => {
                 return (
-                    <p key={idx} className={`${paragraph.type === 'numbering' ? 'numbered' : ''}`}>
-                        {sentenceHighlighter(paragraph).map((words, idx) => {
-                            return <span key={idx} className={`${words.color ? `highlighted-span` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
-                        })}
-                    </p>
+                    <div key={idx} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`}>
+                        <p onMouseOver={() => setGearShows(idx)} onMouseLeave={() => setGearShows(false)}>
+                            {sentenceHighlighter(paragraph).map((words, index) => {
+                                return <span key={index} className={`${words.color ? `highlighted-span-${idx}` : ''}`} style={{ background: words.color ?? 'white' }}>{words.sentence}</span>
+                            })}
+                        </p>
+                        {isGearShows === idx &&
+                            <div
+                                className='menu relative'
+                                onMouseOver={() => setGearShows(idx)}
+                                onMouseLeave={() => setGearShows(false)}
+                            >
+                                <ParagraphPopover index={idx} />
+                            </div>
+                        }
+                    </div>
                 )
             })}
         </>
