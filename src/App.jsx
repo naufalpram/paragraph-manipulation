@@ -1,93 +1,49 @@
-import { useRef, useState } from 'react';
-import QuillEditor from './components/Quill';
-import { Delta } from 'quill/core';
-import Task1 from './Task1';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
+import QuillEditor from './components/Quill';
+import Task1 from './Task1';
+import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
 
 const App = () => {
   const [range, setRange] = useState();
   const [lastChange, setLastChange] = useState();
-  const [readOnly, setReadOnly] = useState(false);
 
   // Use a ref to access the quill instance directly
   const quillRef = useRef();
 
-  function setTextBoldItalic() {
-    if (quillRef.current.getSelection() === null) return;
+  useEffect(() => {
+    artikelMakananFavorit.forEach((paragraph) => {
+      const prevLength = quillRef.current.getLength();
+      if (paragraph.type === 'numbering') {
+        quillRef.current.insertText(prevLength, paragraph.text + '\n', { list: 'ordered' });
+      } else {
+        quillRef.current.insertText(prevLength, paragraph.text + '\n\n', { list: false });
+        quillRef.current.format('list', false)
+      }
 
-    const { index, length } = quillRef.current.getSelection()
-    if (index === -1) return;
-
-    const currentFormat = quillRef.current.getFormat(index, length);
-
-    quillRef.current.formatText(index, length, 'bold', !currentFormat.bold)
-    quillRef.current.formatText(index, length, 'italic', !currentFormat.italic)
-  }
-
-  function setTextSplitWithDashes() {
-    if (quillRef.current.getSelection() === null) return;
-
-    const { index, length } = quillRef.current.getSelection()
-    if (index === -1) return;
-
-    // Reformat the text with dashes
-    const text = quillRef.current.getText(index, length);
-    const updatedText = text.trim().replace(/\s/g, "").split('').join('-');
-    // Get current format that will be applied to updated text
-    const currentFormat = quillRef.current.getFormat(index, updatedText.length);
-
-    // Insert updated text and apply previous format
-    quillRef.current
-    .updateContents(new Delta()
-                    .retain(index)
-                    .delete(length)
-                    .insert(updatedText, { ...currentFormat })
-                  );
-  }
-
-  function addCommentToSelection() {
-    if (quillRef.current.getSelection() === null) return;
-
-    const { index, length } = quillRef.current.getSelection()
-    if (index === -1) return;
-
-    const currentFormat = quillRef.current.getFormat(index, length);
-
-    quillRef.current.formatText(index, length, 
-      { ...currentFormat, background: currentFormat?.background ? "transparent" : "#d7ad33", color: currentFormat?.color ? "#fff" : "#000"}
-    );
-  }
+      if (paragraph.highlight) {
+        paragraph.highlight.forEach((style) => quillRef.current.formatText(prevLength + style.start, style.end - style.start, { background: style.color }));
+      }
+    });
+  }, []);
 
   return (
     <>
-      <main className='w-full h-screen bg-gray-400 flex items-center flex-col gap-4'>
+      <main className='p-8 bg-[#111827] flex items-center flex-col gap-4 font-sans'>
         <div>
-          <h1>Paragraph Manipulation</h1>
+          <h1 className='text-white'>Paragraph Manipulation</h1>
         </div>
-        <section className='w-3/4 mt-4'>
+        <section className='task-1 w-3/4 mt-4 p-4 bg-white'>
+          <Task1 />
+        </section>
+        <section className='w-full mt-4 block max-w-7xl p-6 border rounded-lg shadow bg-gray-800 border-gray-700'>
+          <h2 className='text-white mb-6'>Task 2</h2>
           <QuillEditor
             ref={quillRef}
-            readOnly={readOnly}
-            defaultValue={new Delta()
-              .insert('Hello\n', { header: 1 })
-              .insert('Some ')
-              .insert('initial\n', { bold: true })
-              .insert(' ')
-              .insert('content', { underline: true })
-              .insert('\n')
-            .insert('this is a long text', { background: '#FF5733' })}
             onSelectionChange={setRange}
             onTextChange={setLastChange}
           />
           <div className="flex border border-[#ccc] justify-between p-3">
-            <label>
-              Read Only:{' '}
-              <input
-                type="checkbox"
-                value={readOnly}
-                onChange={(e) => setReadOnly(e.target.checked)}
-              />
-            </label>
             <button
               className="px-4 py-2 font-semibold text-sm text-emerald-600 bg-transparent border-1 border-emerald-600 transition-all hover:text-white hover:bg-emerald-600 rounded"
               type="button"
@@ -99,11 +55,11 @@ const App = () => {
               Send
             </button>
           </div>
-          <div className="mx-3 my-0">
+          <div className="mx-3 my-0 text-[#84a3af]">
             <div className="text-[#999] uppercase">Current Range:</div>
             {range ? JSON.stringify(range) : 'Empty'}
           </div>
-          <div className="mx-3 my-0">
+          <div className="mx-3 my-0 text-[#84a3af]">
             <div className="text-[#999] uppercase">Last Change:</div>
             {lastChange ? JSON.stringify(lastChange.ops) : 'Empty'}
           </div>
@@ -116,9 +72,6 @@ const App = () => {
           <MenuItem label="Save As..." />
           <MenuItem label="Print" />
         </Menu> */}
-        <section className='task-1 w-3/4 mt-4 p-4 bg-white'>
-          <Task1 />
-        </section>
       </main>
     </>
   );

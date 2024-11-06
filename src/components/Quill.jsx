@@ -2,7 +2,7 @@ import Quill from "quill";
 import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 
 const Editor = forwardRef(
-  ({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
+  ({ defaultValue, onTextChange, onSelectionChange }, ref) => {
     const containerRef = useRef(null);
     const defaultValueRef = useRef(defaultValue);
     const onTextChangeRef = useRef(onTextChange);
@@ -14,15 +14,12 @@ const Editor = forwardRef(
     });
 
     useEffect(() => {
-      ref.current?.enable(!readOnly);
-    }, [ref, readOnly]);
-
-    useEffect(() => {
       const container = containerRef.current;
       const editorContainer = container.appendChild(
         container.ownerDocument.createElement("div")
       );
       const quill = new Quill(editorContainer, {
+        readOnly: true,
         theme: "bubble",
         modules: {
           toolbar: false
@@ -53,7 +50,7 @@ const Editor = forwardRef(
     return (
       <div
         ref={containerRef}
-        className="bg-white text-black border border-gray-200 p-5 rounded-tr rounded-tl w-1/2"
+        className="bg-white text-black border border-gray-200 p-6 rounded-tr rounded-tl max-w-7xl"
       ></div>
     );
   }
