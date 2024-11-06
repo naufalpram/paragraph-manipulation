@@ -36,3 +36,19 @@
     }
   }
 }
+
+.Popover {
+  width: max-content;
+  max-width: calc(100vw - 20px);
+  background-color: white;
+  border: 1px solid #ddd;
+  font-size: 90%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: left;
+  min-width: 320px;
+}
+
+.Popover textarea {
+  max-width: 100%;
+}
