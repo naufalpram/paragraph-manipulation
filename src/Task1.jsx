@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useState } from 'react';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
-import ParagraphPopover from './components/ParagraphPopover';
 import ParagraphPopover from './components/ParagraphPopover';
 
 const Task1 = () => {
