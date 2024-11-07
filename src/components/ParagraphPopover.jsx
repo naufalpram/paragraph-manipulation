@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   useFloating,
   autoUpdate,
@@ -17,7 +17,7 @@ import { Cogwheel } from '../assets/icons';
 const ParagraphPopover = ({ index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSpan, setToggleSpan] = useState(false);
-  const [changedWords, setWords] = useState('');
+  const changedWords = useRef();
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -42,21 +42,20 @@ const ParagraphPopover = ({ index }) => {
 
   const headingId = useId();
 
-  const handleChangeWords = (val) => {
-    setWords(val);
-  }
+  const handleSetWords = (words) => {
+    if (!words || words.trim() === '') return;
 
-  const handleSetWords = () => {
     const arrSpan = document.getElementsByClassName(`highlighted-span-${index}`);
-    const arrWords = changedWords.split(",");
+    const arrWords = words.split(",");
+    arrWords.forEach((word, index) => {
+      arrWords[index] = word.trimStart();
+    });
     let tempArr = []
+
     if (isSpan) {
-      arrWords.forEach((word, index) => {
-        arrWords[index] = word.trimStart();
-      });
       if (arrWords.length < arrSpan.length) {
         for (const span of arrSpan) {
-          span.innerHTML = changedWords;
+          span.innerHTML = words;
         };
       } else {
         if (arrWords.length > arrSpan.length) {
@@ -72,7 +71,7 @@ const ParagraphPopover = ({ index }) => {
       }
     } else {
       for (const span of arrSpan) {
-        span.innerHTML = changedWords;
+        span.innerHTML = words;
       };
     }
   }
@@ -109,17 +108,17 @@ const ParagraphPopover = ({ index }) => {
               <div className="flex justify-between">
                 <label htmlFor="exemption">Penggantian Kata</label>
                 <div className="flex gap-2">
-                  <input type="checkbox" name="toggle" id="toggle" value={isSpan} onChange={() => setToggleSpan(prev => !prev)} />
+                  <input type="checkbox" name="toggle" id="toggle" checked={isSpan} onChange={() => setToggleSpan(prev => !prev)} />
                   <label htmlFor="toggle">Span Manipulator</label>
                 </div>
               </div>
-              <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" onChange={(e) => handleChangeWords(e.target.value)} />
+              <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" ref={changedWords} />
             </div>
             <br />
             <button
               className="bg-violet-800 text-white rounded-md px-4 py-2 w-full border"
               onClick={() => {
-                handleSetWords();
+                handleSetWords(changedWords.current.value);
                 setIsOpen(false);
                 setToggleSpan(false);
               }}
