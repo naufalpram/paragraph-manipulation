@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useState } from 'react';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
+import ParagraphPopover from './components/ParagraphPopover';
 import ParagraphPopover from './components/ParagraphPopover';
 
 const Task1 = () => {
-    const [isGearShows, setGearShows] = useState(false);
-    const sentenceHighlighter = (paragraph) => {
+    const [onHover, setOnHover] = useState(-1);
+    const sentenceHighlighter = ( paragraph ) => {
         let arrHighlighter = [];
 
         if (paragraph.highlight) {
@@ -30,7 +32,6 @@ const Task1 = () => {
             }
             tempArr = wordsToSlice.split(slicer.sentence);
             arrSentence.push({ sentence: tempArr[0] }, slicer, { sentence: tempArr[1] });
-            console.log(wordsToSlice, tempArr, arrSentence);
         })
 
         return arrSentence;
@@ -41,21 +42,13 @@ const Task1 = () => {
             <h1 className='text-lg mb-4'>Task 1</h1>
             {artikelMakananFavorit.map((paragraph, idx) => {
                 return (
-                    <div key={idx} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`}>
-                        <p onMouseOver={() => setGearShows(idx)} onMouseLeave={() => setGearShows(false)}>
-                            {sentenceHighlighter(paragraph).map((words, index) => {
-                                return <span key={index} className={`${words.color ? `highlighted-span-${idx}` : ''}`} style={{ background: words.color ?? 'white' }}>{words.sentence}</span>
+                    <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover(-1)}>
+                        <p>
+                            {sentenceHighlighter(paragraph).map((words, spanIdx) => {
+                                return <span key={spanIdx} className={`${words.color ? `highlighted-span-${spanIdx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
                             })}
                         </p>
-                        {isGearShows === idx &&
-                            <div
-                                className='menu relative'
-                                onMouseOver={() => setGearShows(idx)}
-                                onMouseLeave={() => setGearShows(false)}
-                            >
-                                <ParagraphPopover index={idx} />
-                            </div>
-                        }
+                        {onHover === idx && <ParagraphPopover paragraphIdx={idx} />}
                     </div>
                 )
             })}

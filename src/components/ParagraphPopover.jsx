@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   useFloating,
   autoUpdate,
@@ -14,7 +14,8 @@ import {
 } from "@floating-ui/react";
 import { Cogwheel } from '../assets/icons';
 
-const ParagraphPopover = ({ index }) => {
+function ParagraphPopover({ paragraphIdx }) {
+  const replacementRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
   const [changedWords, setWords] = useState('');
 
@@ -41,15 +42,17 @@ const ParagraphPopover = ({ index }) => {
 
   const headingId = useId();
 
-  const handleChangeWords = (val) => {
-    setWords(val);
-  }
+  const replaceWords = (words) => {
+    if (!words || words?.trim() === '') return;
+    const replacementWords = words.split(',');
 
-  const handleSetWords = () => {
-    const arrSpan = document.getElementsByClassName(`highlighted-span-${index}`);
-    for (var i = 0; i < arrSpan.length; i++) {
-      arrSpan[i].innerHTML = changedWords;
-    }
+    const highlighted = document.querySelectorAll(`#paragraph-${paragraphIdx} > p span[class^="highlighted-span"]`);
+
+    let word = replacementWords[0];
+    highlighted.forEach((item, idx) => {
+      if (idx > 0 && idx < replacementWords.length) word = replacementWords[idx];
+      if (word && word !== '') item.textContent = word;
+    })
   }
 
   return (
@@ -77,20 +80,20 @@ const ParagraphPopover = ({ index }) => {
           >
             <h2 id={headingId}>Setelan Draft</h2>
             <hr className="my-2" />
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
                 <label htmlFor="alternative">Jumlah Alternatif</label>
                 <input className="w-8" type="number" name="alternative" id="alternative" placeholder="0" />
             </div>
-            <hr className="my-2" />
+            <hr className="my-2" /> */}
             <div className="flex flex-col gap-2">
                 <label htmlFor="exemption">Penggantian Kata</label>
-                <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" onChange={(e) => handleChangeWords(e.target.value)} />
+                <textarea className="p-2" name="exemption" id="exemption" placeholder={"Tulis kata pengganti dipisahkan koma, e.g. \"Kata satu,kata dua\""} ref={replacementRef} />
             </div>
             <br />
             <button
               className="bg-violet-800 text-white rounded-md px-4 py-2 w-full border"
               onClick={() => {
-                handleSetWords();
+                replaceWords(replacementRef.current.value);
                 setIsOpen(false);
               }}
             >
