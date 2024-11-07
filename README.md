@@ -1,6 +1,32 @@
-# React + Vite
+## Paragraph Manipulation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple web-based tool built with React and Vite for performing various text manipulation tasks. This application provides functionality to modify paragraphs, offering a quick and efficient way to process text data.
+
+## Features
+Text Manipulation: Perform a range of text operations such as reversing, capitalizing, and formatting paragraphs.
+Responsive Design: Built with Tailwind CSS for a mobile-friendly experience.
+
+## Installation
+Clone this repository:
+```bash
+git clone https://github.com/naufalpram/paragraph-manipulation.git
+```
+Install dependencies:
+```bash
+npm install
+```
+Start the development server:
+```bash
+npm run dev
+```
+
+## Technologies
+React
+Vite
+Tailwind CSS
+
+## License
+This project is licensed under the MIT License.
 
 Currently, two official plugins are available:
 
