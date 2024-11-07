@@ -45,7 +45,7 @@ const Task1 = () => {
                     <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover(-1)}>
                         <p>
                             {sentenceHighlighter(paragraph).map((words, spanIdx) => {
-                                return <span key={spanIdx} className={`${words.color ? `highlighted-span-${spanIdx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
+                                return <span key={spanIdx} className={`${words.color ? `highlighted-span-${idx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
                             })}
                         </p>
                         {onHover === idx && <ParagraphPopover paragraphIdx={idx} />}

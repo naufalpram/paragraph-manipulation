@@ -17,7 +17,8 @@ import { Cogwheel } from '../assets/icons';
 function ParagraphPopover({ paragraphIdx }) {
   const replacementRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
-  const [changedWords, setWords] = useState('');
+  const [isSpan, setToggleSpan] = useState(false);
+  const changedWords = useRef();
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -44,15 +45,23 @@ function ParagraphPopover({ paragraphIdx }) {
 
   const replaceWords = (words) => {
     if (!words || words?.trim() === '') return;
+    const highlighted = document.querySelectorAll(`#paragraph-${paragraphIdx} > p span[class^="highlighted-span-${paragraphIdx}"]`);
     const replacementWords = words.split(',');
-
-    const highlighted = document.querySelectorAll(`#paragraph-${paragraphIdx} > p span[class^="highlighted-span"]`);
-
+    replacementWords.forEach((word, index) => {
+      replacementWords[index] = word.trimStart();
+    });
     let word = replacementWords[0];
-    highlighted.forEach((item, idx) => {
-      if (idx > 0 && idx < replacementWords.length) word = replacementWords[idx];
-      if (word && word !== '') item.textContent = word;
-    })
+
+    if (isSpan) {
+      highlighted.forEach((item, idx) => {
+        if (idx > 0 && idx < replacementWords.length) word = replacementWords[idx];
+        if (word && word !== '') item.textContent = word;
+      })
+    } else {
+      for (const span of highlighted) {
+        span.textContent = words;
+      };
+    }
   }
 
   return (
@@ -65,8 +74,6 @@ function ParagraphPopover({ paragraphIdx }) {
         <Cogwheel
           size={24}
           color='#F3F3F3'
-          // ref={refs.setReference}
-          // {...getReferenceProps()}
         />
       </button>
       {isOpen && (
@@ -86,15 +93,22 @@ function ParagraphPopover({ paragraphIdx }) {
             </div>
             <hr className="my-2" /> */}
             <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
                 <label htmlFor="exemption">Penggantian Kata</label>
-                <textarea className="p-2" name="exemption" id="exemption" placeholder={"Tulis kata pengganti dipisahkan koma, e.g. \"Kata satu,kata dua\""} ref={replacementRef} />
+                <div className="flex gap-2">
+                  <input type="checkbox" name="toggle" id="toggle" checked={isSpan} onChange={() => setToggleSpan(prev => !prev)} />
+                  <label htmlFor="toggle">Span Manipulator</label>
+                </div>
+              </div>
+              <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" ref={changedWords} />
             </div>
             <br />
             <button
               className="bg-violet-800 text-white rounded-md px-4 py-2 w-full border"
               onClick={() => {
-                replaceWords(replacementRef.current.value);
+                replaceWords(changedWords.current.value);
                 setIsOpen(false);
+                setToggleSpan(false);
               }}
             >
               Terapkan
