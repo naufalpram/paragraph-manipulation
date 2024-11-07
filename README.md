@@ -1,4 +1,4 @@
-## Paragraph Manipulation
+# Paragraph Manipulation
 
 A simple web-based tool built with React and Vite for performing various text manipulation tasks. This application provides functionality to modify paragraphs, offering a quick and efficient way to process text data.
 
