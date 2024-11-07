@@ -46,7 +46,11 @@ const Task1 = () => {
                                 return <span key={spanIdx} className={`${words.color ? `highlighted-span-${idx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
                             })}
                         </p>
-                        {onHover === idx && <ParagraphPopover paragraphIdx={idx} />}
+                        {onHover === idx &&
+                            <div className='menu relative'>
+                                <ParagraphPopover paragraphIdx={idx} />
+                            </div>
+                        }
                     </div>
                 )
             })}
