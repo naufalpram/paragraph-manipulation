@@ -10,12 +10,15 @@ const Task2 = () => {
   const quillRef = useRef();
 
   useEffect(() => {
-    artikelMakananFavorit.forEach((paragraph) => {
+    artikelMakananFavorit.forEach((paragraph, idx) => {
       const prevLength = quillRef.current.getLength();
       if (paragraph.type === 'numbering') {
-        quillRef.current.insertText(prevLength, paragraph.text + '\n', { list: 'ordered' });
+        if (idx === artikelMakananFavorit.length - 1) quillRef.current.insertText(prevLength, paragraph.text, { list: 'ordered' });
+        else quillRef.current.insertText(prevLength, paragraph.text + '\n', { list: 'ordered' });
       } else {
-        quillRef.current.insertText(prevLength, paragraph.text + '\n\n', { list: false });
+        if (idx === 0) quillRef.current.insertText(prevLength, paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`, { list: false });
+        else if (idx === artikelMakananFavorit.length - 1) quillRef.current.insertText(prevLength, '\n' + paragraph.text, { list: false });
+        else quillRef.current.insertText(prevLength, '\n' + paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`, { list: false });
       }
 
       if (paragraph.highlight) {

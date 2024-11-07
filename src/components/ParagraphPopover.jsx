@@ -45,33 +45,21 @@ const ParagraphPopover = ({ index }) => {
   const handleSetWords = (words) => {
     if (!words || words.trim() === '') return;
 
-    const arrSpan = document.getElementsByClassName(`highlighted-span-${index}`);
+    const arrSpan = document.querySelectorAll(`.highlighted-span-${index}`);
     const arrWords = words.split(",");
     arrWords.forEach((word, index) => {
       arrWords[index] = word.trimStart();
     });
-    let tempArr = []
+    let tempWord = arrWords[0];
 
     if (isSpan) {
-      if (arrWords.length < arrSpan.length) {
-        for (const span of arrSpan) {
-          span.innerHTML = words;
-        };
-      } else {
-        if (arrWords.length > arrSpan.length) {
-          tempArr = arrWords.slice(0, arrSpan.length);
-          tempArr.forEach((word, index) => {
-            arrSpan[index].innerHTML = word;
-          });
-        } else {
-          arrWords.forEach((word, index) => {
-            arrSpan[index].innerHTML = word;
-          });
-        }
-      }
+      arrSpan.forEach((span, idx) => {
+        if (idx > 0 && idx < arrSpan.length) tempWord = arrWords[idx];
+        if (tempWord && tempWord !== '') span.textContent = tempWord;
+      })
     } else {
       for (const span of arrSpan) {
-        span.innerHTML = words;
+        span.textContent = words;
       };
     }
   }
