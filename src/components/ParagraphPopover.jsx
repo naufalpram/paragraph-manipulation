@@ -16,6 +16,7 @@ import { Cogwheel } from '../assets/icons';
 
 const ParagraphPopover = ({ index }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSpan, setToggleSpan] = useState(false);
   const [changedWords, setWords] = useState('');
 
   const { refs, floatingStyles, context } = useFloating({
@@ -47,8 +48,32 @@ const ParagraphPopover = ({ index }) => {
 
   const handleSetWords = () => {
     const arrSpan = document.getElementsByClassName(`highlighted-span-${index}`);
-    for (var i = 0; i < arrSpan.length; i++) {
-      arrSpan[i].innerHTML = changedWords;
+    const arrWords = changedWords.split(",");
+    let tempArr = []
+    if (isSpan) {
+      arrWords.forEach((word, index) => {
+        arrWords[index] = word.trimStart();
+      });
+      if (arrWords.length < arrSpan.length) {
+        for (const span of arrSpan) {
+          span.innerHTML = changedWords;
+        };
+      } else {
+        if (arrWords.length > arrSpan.length) {
+          tempArr = arrWords.slice(0, arrSpan.length);
+          tempArr.forEach((word, index) => {
+            arrSpan[index].innerHTML = word;
+          });
+        } else {
+          arrWords.forEach((word, index) => {
+            arrSpan[index].innerHTML = word;
+          });
+        }
+      }
+    } else {
+      for (const span of arrSpan) {
+        span.innerHTML = changedWords;
+      };
     }
   }
 
@@ -62,8 +87,6 @@ const ParagraphPopover = ({ index }) => {
         <Cogwheel
           size={24}
           color='#F3F3F3'
-          // ref={refs.setReference}
-          // {...getReferenceProps()}
         />
       </button>
       {isOpen && (
@@ -78,13 +101,19 @@ const ParagraphPopover = ({ index }) => {
             <h2 id={headingId}>Setelan Draft</h2>
             <hr className="my-2" />
             <div className="flex justify-between">
-                <label htmlFor="alternative">Jumlah Alternatif</label>
-                <input className="w-8" type="number" name="alternative" id="alternative" placeholder="0" />
+              <label htmlFor="alternative">Jumlah Alternatif</label>
+              <input className="w-8" type="number" name="alternative" id="alternative" placeholder="0" />
             </div>
             <hr className="my-2" />
             <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
                 <label htmlFor="exemption">Penggantian Kata</label>
-                <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" onChange={(e) => handleChangeWords(e.target.value)} />
+                <div className="flex gap-2">
+                  <input type="checkbox" name="toggle" id="toggle" value={isSpan} onChange={() => setToggleSpan(prev => !prev)} />
+                  <label htmlFor="toggle">Span Manipulator</label>
+                </div>
+              </div>
+              <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" onChange={(e) => handleChangeWords(e.target.value)} />
             </div>
             <br />
             <button
@@ -92,6 +121,7 @@ const ParagraphPopover = ({ index }) => {
               onClick={() => {
                 handleSetWords();
                 setIsOpen(false);
+                setToggleSpan(false);
               }}
             >
               Terapkan
