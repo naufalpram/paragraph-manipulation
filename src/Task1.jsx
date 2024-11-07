@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
+import ParagraphPopover from './components/ParagraphPopover';
 
 const Task1 = () => {
+    const [onHover, setOnHover] = useState(-1);
     const sentenceHighlighter = ( paragraph ) => {
         let arrHighlighter = [];
 
@@ -27,7 +30,6 @@ const Task1 = () => {
             }
             tempArr = wordsToSlice.split(slicer.sentence);
             arrSentence.push({ sentence: tempArr[0] }, slicer, { sentence: tempArr[1] });
-            console.log(wordsToSlice, tempArr, arrSentence);
         })
 
         return arrSentence;
@@ -38,11 +40,14 @@ const Task1 = () => {
             <h1 className='text-lg mb-4'>Task 1</h1>
             {artikelMakananFavorit.map((paragraph, idx) => {
                 return (
-                    <p key={idx} className={`${paragraph.type === 'numbering' ? 'numbered' : ''}`}>
-                        {sentenceHighlighter(paragraph).map((words, idx) => {
-                            return <span key={idx} className={`${words.color ? `highlighted-span` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
-                        })}
-                    </p>
+                    <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover}>
+                        <p>
+                            {sentenceHighlighter(paragraph).map((words, spanIdx) => {
+                                return <span key={spanIdx} className={`${words.color ? `highlighted-span-${spanIdx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
+                            })}
+                        </p>
+                        {onHover === idx && <ParagraphPopover paragraphIdx={idx} />}
+                    </div>
                 )
             })}
         </>
