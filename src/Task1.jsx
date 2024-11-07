@@ -40,7 +40,7 @@ const Task1 = () => {
             <h1 className='text-lg mb-4'>Task 1</h1>
             {artikelMakananFavorit.map((paragraph, idx) => {
                 return (
-                    <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover}>
+                    <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover(-1)}>
                         <p>
                             {sentenceHighlighter(paragraph).map((words, spanIdx) => {
                                 return <span key={spanIdx} className={`${words.color ? `highlighted-span-${spanIdx}` : ''}`} style={{background: words.color ?? 'white'}}>{words.sentence}</span>
