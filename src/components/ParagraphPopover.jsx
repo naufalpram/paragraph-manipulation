@@ -15,9 +15,8 @@ import {
 import { Cogwheel } from '../assets/icons';
 
 function ParagraphPopover({ paragraphIdx }) {
-  const replacementRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
-  const [isSpan, setToggleSpan] = useState(false);
+  const [isMultiReplace, setIsMultiReplace] = useState(false);
   const changedWords = useRef();
 
   const { refs, floatingStyles, context } = useFloating({
@@ -52,7 +51,7 @@ function ParagraphPopover({ paragraphIdx }) {
     });
     let word = replacementWords[0];
 
-    if (isSpan) {
+    if (isMultiReplace) {
       highlighted.forEach((item, idx) => {
         if (idx > 0 && idx < replacementWords.length) word = replacementWords[idx];
         if (word && word !== '') item.textContent = word;
@@ -87,17 +86,12 @@ function ParagraphPopover({ paragraphIdx }) {
           >
             <h2 id={headingId}>Setelan Draft</h2>
             <hr className="my-2" />
-            {/* <div className="flex justify-between">
-                <label htmlFor="alternative">Jumlah Alternatif</label>
-                <input className="w-8" type="number" name="alternative" id="alternative" placeholder="0" />
-            </div>
-            <hr className="my-2" /> */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <label htmlFor="exemption">Penggantian Kata</label>
                 <div className="flex gap-2">
-                  <input type="checkbox" name="toggle" id="toggle" checked={isSpan} onChange={() => setToggleSpan(prev => !prev)} />
-                  <label htmlFor="toggle">Span Manipulator</label>
+                  <input type="checkbox" name="toggle" id="toggle" checked={isMultiReplace} onChange={() => setIsMultiReplace(prev => !prev)} />
+                  <label htmlFor="toggle">Enable Multi Replace</label>
                 </div>
               </div>
               <textarea className="p-2" name="exemption" id="exemption" placeholder="Tulis kata pengganti dipisahkan koma" ref={changedWords} />
@@ -108,7 +102,7 @@ function ParagraphPopover({ paragraphIdx }) {
               onClick={() => {
                 replaceWords(changedWords.current.value);
                 setIsOpen(false);
-                setToggleSpan(false);
+                setIsMultiReplace(false);
               }}
             >
               Terapkan

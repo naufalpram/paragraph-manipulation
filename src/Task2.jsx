@@ -13,12 +13,15 @@ const Task2 = () => {
     artikelMakananFavorit.forEach((paragraph, idx) => {
       const prevLength = quillRef.current.getLength();
       if (paragraph.type === 'numbering') {
-        if (idx === artikelMakananFavorit.length - 1) quillRef.current.insertText(prevLength, paragraph.text, { list: 'ordered' });
-        else quillRef.current.insertText(prevLength, paragraph.text + '\n', { list: 'ordered' });
+        quillRef.current.insertText(prevLength, paragraph.text + '\n', { list: 'ordered' });
       } else {
-        if (idx === 0) quillRef.current.insertText(prevLength, paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`, { list: false });
-        else if (idx === artikelMakananFavorit.length - 1) quillRef.current.insertText(prevLength, '\n' + paragraph.text, { list: false });
-        else quillRef.current.insertText(prevLength, '\n' + paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`, { list: false });
+        let input = paragraph.text;
+        // if (idx === 0) input = paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`;
+        // else if (idx === artikelMakananFavorit.length - 1) input = '\n' + paragraph.text;
+        // else input = '\n' + paragraph.text + `\n${artikelMakananFavorit[idx + 1].type === 'numbering' ? '\n' : ''}`;
+        if (idx < artikelMakananFavorit.length - 1) input = `${artikelMakananFavorit[idx - 1]?.type === 'numbering' ? '\n' : ''}` + input + '\n\n';
+        else input = `${artikelMakananFavorit[idx - 1].type === 'numbering' ? '\n' : ''}` + input;
+        quillRef.current.insertText(prevLength, input, { list: false });
       }
 
       if (paragraph.highlight) {

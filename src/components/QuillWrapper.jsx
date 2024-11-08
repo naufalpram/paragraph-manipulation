@@ -19,7 +19,7 @@ const Editor = forwardRef(
         container.ownerDocument.createElement("div")
       );
       const quill = new Quill(editorContainer, {
-        readOnly: true,
+        // readOnly: true,
         theme: "bubble",
         modules: {
           toolbar: false
