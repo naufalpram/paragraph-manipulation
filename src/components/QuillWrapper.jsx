@@ -19,7 +19,6 @@ const Editor = forwardRef(
         container.ownerDocument.createElement("div")
       );
       const quill = new Quill(editorContainer, {
-        // readOnly: true,
         theme: "bubble",
         modules: {
           toolbar: false
@@ -46,6 +45,25 @@ const Editor = forwardRef(
         container.innerHTML = "";
       };
     }, [ref]);
+
+    useEffect(() => {
+      containerRef.current.addEventListener('keyup', (event) => {
+        if (event.key === 'Backspace') {
+          const undoStack = ref.current.history.stack.undo;
+          const attributes = undoStack[undoStack.length - 1]?.delta?.ops?.[1].attributes;
+  
+          if (!attributes) {
+            console.log('masuk');
+            
+            const position = ref.current.getSelection();
+            position && ref.current.format('background', 'white');
+          }
+          else {
+            ref.current.format("background", attributes["background"]);
+          }
+        }
+      });
+    }, [ref, containerRef])
 
     return (
       <div
