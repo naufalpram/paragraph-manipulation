@@ -12,16 +12,17 @@ import {
   FloatingFocusManager,
   useId
 } from "@floating-ui/react";
+import ParagraphSlicer from './ParagraphSlicer';
 import { Cogwheel } from '../assets/icons';
 
-function ParagraphPopover({ paragraphIdx }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMultiReplace, setIsMultiReplace] = useState(false);
+function ParagraphPopoverV2({ paragraphIdx, article, setArticle }) {
+  const [isOpen, setOpen] = useState(false);
+  const [isMulti, setMulti] = useState(false);
   const changedWords = useRef();
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
-    onOpenChange: setIsOpen,
+    onOpenChange: setOpen,
     middleware: [
       offset(10),
       flip({ fallbackAxisSideDirection: "end" }),
@@ -42,25 +43,8 @@ function ParagraphPopover({ paragraphIdx }) {
 
   const headingId = useId();
 
-  const replaceWords = (words) => {
-    if (!words || words?.trim() === '') return;
-    const highlighted = document.querySelectorAll(`#paragraph-${paragraphIdx} > p span[class^="highlighted-span-${paragraphIdx}"]`);
-    const replacementWords = words.split(',');
-    replacementWords.forEach((word, index) => {
-      replacementWords[index] = word.trimStart();
-    });
-    let word = replacementWords[0];
-
-    if (isMultiReplace) {
-      highlighted.forEach((item, idx) => {
-        if (idx > 0 && idx < replacementWords.length) word = replacementWords[idx];
-        if (word && word !== '') item.textContent = word;
-      })
-    } else {
-      for (const span of highlighted) {
-        span.textContent = words;
-      };
-    }
+  const handleReplaceWords = (words) => {
+    ParagraphSlicer(paragraphIdx, words, isMulti, article, setArticle)
   }
 
   return (
@@ -90,7 +74,7 @@ function ParagraphPopover({ paragraphIdx }) {
               <div className="flex justify-between">
                 <label htmlFor="exemption">Penggantian Kata</label>
                 <div className="flex gap-2">
-                  <input type="checkbox" name="toggle" id="toggle" checked={isMultiReplace} onChange={() => setIsMultiReplace(prev => !prev)} />
+                  <input type="checkbox" name="toggle" id="toggle" checked={isMulti} onChange={() => setMulti(prev => !prev)} />
                   <label htmlFor="toggle">Enable Multi Replace</label>
                 </div>
               </div>
@@ -100,9 +84,8 @@ function ParagraphPopover({ paragraphIdx }) {
             <button
               className="bg-violet-800 text-white rounded-md px-4 py-2 w-full border"
               onClick={() => {
-                replaceWords(changedWords.current.value);
-                setIsOpen(false);
-                setIsMultiReplace(false);
+                handleReplaceWords(changedWords.current.value)
+                setOpen(false);
               }}
             >
               Terapkan
@@ -114,4 +97,4 @@ function ParagraphPopover({ paragraphIdx }) {
   );
 }
 
-export default ParagraphPopover;
+export default ParagraphPopoverV2;

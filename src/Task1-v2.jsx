@@ -1,43 +1,37 @@
 import { useState } from 'react';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
-import ParagraphPopover from './components/ParagraphPopover';
+import ParagraphPopoverV2 from './components/ParagraphPopover-v2';
 
-const Task1 = () => {
+const Task1V2 = () => {
     const [onHover, setOnHover] = useState(-1);
+    const [article, setArticle] = useState(artikelMakananFavorit);
+
+
     const sentenceHighlighter = ( paragraph ) => {
-        let arrHighlighter = [];
+        let arrSentence = [];
+        let lastCutIndex = 0;
 
         if (paragraph.highlight) {
             paragraph.highlight.forEach((highlighter) => {
+                let cutIndex = 0;
+                if (arrSentence.length > 0) {
+                    arrSentence.pop();
+                    cutIndex = lastCutIndex;
+                } else {
+                    lastCutIndex = highlighter.end;
+                }
+                let startSentence = paragraph.text.slice(cutIndex, highlighter.start);
                 let markedSentence = paragraph.text.slice(highlighter.start, highlighter.end);
-                arrHighlighter.push({ sentence: markedSentence, color: highlighter.color })
+                let restSentence = paragraph.text.slice(highlighter.end);
+                arrSentence.push({ sentence: startSentence }, { sentence: markedSentence, color: highlighter.color }, { sentence: restSentence });
             })
         }
-
-        return wordsSplitter(arrHighlighter, paragraph.text);
-    }
-
-    const wordsSplitter = (arr, text) => {
-        let arrSentence = [];
-        let wordsToSlice = '';
-
-        arr.forEach((slicer) => {
-            let tempArr = [];
-            if (arrSentence.length > 0) {
-                wordsToSlice = arrSentence.pop().sentence;
-            } else {
-                wordsToSlice = text
-            }
-            tempArr = wordsToSlice.split(slicer.sentence);
-            arrSentence.push({ sentence: tempArr[0] }, slicer, { sentence: tempArr[1] });
-        })
-
         return arrSentence;
     }
 
     return (
         <>
-            {artikelMakananFavorit.map((paragraph, idx) => {
+            {article.map((paragraph, idx) => {
                 return (
                     <div key={idx} id={`paragraph-${idx}`} className={`${paragraph.type === 'numbering' ? 'numbered' : ''} flex`} onMouseEnter={() => setOnHover(idx)} onMouseLeave={() => setOnHover(-1)}>
                         <p>
@@ -47,7 +41,13 @@ const Task1 = () => {
                         </p>
                         {onHover === idx &&
                             <div className='menu relative'>
-                                <ParagraphPopover paragraphIdx={idx} />
+                                <ParagraphPopoverV2
+                                    paragraphIdx={idx}
+                                    // isMulti={changedWords.isMulti}
+                                    // setChangedWords={setChangedWords}
+                                    article={article}
+                                    setArticle={setArticle}
+                                />
                             </div>
                         }
                     </div>
@@ -57,4 +57,4 @@ const Task1 = () => {
     )
 }
 
-export default Task1
+export default Task1V2
