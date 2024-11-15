@@ -31,7 +31,10 @@ const QuillPopover = forwardRef((_, quillRef) => {
   });
 
   const click = useClick(context);
-  const dismiss = useDismiss(context);
+  const dismiss = useDismiss(context, {
+    outsidePress: () => setQuillSelection(null) || true,
+    escapeKey: () => setQuillSelection(null) || true
+  });
   const role = useRole(context);
 
   const { getFloatingProps } = useInteractions([
@@ -48,8 +51,7 @@ const QuillPopover = forwardRef((_, quillRef) => {
     if (!quillSelection || quillSelection?.length === 0) return;
 
     const contentDelta = quillRef.current.getContents(quillSelection.index, quillSelection.length);
-    // eslint-disable-next-line no-prototype-builtins
-    const highlightedIndices = contentDelta.reduce((prev, curr, idx) => curr?.attributes?.hasOwnProperty('background') ? [...prev, idx] : prev , []);
+    const highlightedIndices = contentDelta.reduce((prev, curr, idx) => 'background' in curr.attributes ? [...prev, idx] : prev , []);
 
     highlightedIndices.forEach(highlightIndex => {
         contentDelta[highlightIndex] = { ...contentDelta[highlightIndex], insert: words }
@@ -78,8 +80,6 @@ const QuillPopover = forwardRef((_, quillRef) => {
   }
 
   useEffect(() => {
-    let timeout;
-
     function onContextMenu(e) {
       e.preventDefault();
 
@@ -102,21 +102,19 @@ const QuillPopover = forwardRef((_, quillRef) => {
       if (selections?.length > 0) {
           setQuillSelection(selections);
           setIsOpen(true);
-      }
-      
-      const popover = document.querySelector('.Popover');
-      function onPopoverFocus() {
+        }
+        
+      const textArea = document.querySelector('#exemption');
+      function onTextAreaFocus() {
           quillRef.current.setSelection(quillSelection);
       }
   
-      popover?.addEventListener("focus", onPopoverFocus);
-      clearTimeout(timeout);
+      textArea?.addEventListener("focus", onTextAreaFocus);
     }
 
     document.addEventListener("contextmenu", onContextMenu);
     return () => {
       document.removeEventListener("contextmenu", onContextMenu);
-      clearTimeout(timeout);    
     };
   }, [refs, quillRef, quillSelection]);
 

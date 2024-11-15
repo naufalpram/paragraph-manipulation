@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import QuillEditor from './components/QuillWrapper';
+import QuillPopover from './components/QuillPopover';
 import { artikelMakananFavorit } from './assets/data/ArtikelMakananFavorit';
 
 const Task2 = () => {
@@ -54,6 +55,7 @@ const Task2 = () => {
         <div className="text-[#999] uppercase">Last Change:</div>
             {lastChange ? JSON.stringify(lastChange.ops) : 'Empty'}
         </div>
+        <QuillPopover ref={quillRef} />
     </>
   )
 }
