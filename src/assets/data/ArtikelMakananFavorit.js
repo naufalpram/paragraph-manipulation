@@ -51,8 +51,8 @@ export const artikelMakananFavorit = [
         type: "plain",
         text: "Indonesia memiliki berbagai jenis makanan dengan cita rasa yang beragam, mencerminkan kekayaan budaya dan kreativitas masyarakatnya. Makanan-makanan di atas hanyalah sebagian dari banyaknya pilihan kuliner yang tersedia, dan masing-masing memiliki daya tariknya tersendiri. Tak heran jika masakan Indonesia selalu dirindukan dan menjadi kebanggaan bagi masyarakatnya di dalam maupun luar negeri.",
         highlight: [
-            { start: 49, end: 71, color: "#FF33A6" },   // cita rasa yang beragam
-            { start: 329, end: 347, color: "#338CFF" }  // menjadi kebanggaan
+            { start: 49, end: 72, color: "#FF33A6" },   // cita rasa yang beragam
+            { start: 329, end: 348, color: "#338CFF" }  // menjadi kebanggaan
         ]
     }
 ];
