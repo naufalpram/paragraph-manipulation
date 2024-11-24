@@ -14,7 +14,7 @@ const App = () => {
         </div>
         <section className='task-1 w-full mt-4 max-w-7xl p-6 bg-gray-800 border border-gray-700 rounded-lg shadow'>
           <div className='task-1-option flex items-center'>
-            <h2 className='title'>Task 1</h2>
+            <h2 className='title'>with HTML</h2>
             <button className={activeTask1 === 'v1' && `active`} onClick={() => setActiveTask1('v1')}>V1</button>
             <button className={activeTask1 === 'v2' && `active`} onClick={() => setActiveTask1('v2')}>V2</button>
           </div>

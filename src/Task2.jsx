@@ -29,7 +29,7 @@ const Task2 = () => {
   }, []);
   return (
     <>
-        <h2 className='text-white mb-6'>Task 2</h2>
+        <h2 className='text-white mb-6'>with Quill</h2>
         <QuillEditor
             ref={quillRef}
             onSelectionChange={setRange}

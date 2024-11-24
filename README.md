@@ -1,10 +1,9 @@
 # Paragraph Manipulation
 
-A simple web-based tool built with React and Vite for performing various text manipulation tasks. This application provides functionality to modify paragraphs, offering a quick and efficient way to process text data.
+A simple web-based proof of concept built with React and Vite for performing text manipulation integrated with custom context menu. This application provides functionality to modify paragraphs, and comparing the modification process with vanilla HTML and Quill JS.
 
 ## Features
-Text Manipulation: Perform a range of text operations such as reversing, capitalizing, and formatting paragraphs.
-Responsive Design: Built with Tailwind CSS for a mobile-friendly experience.
+Text Manipulation: Perform a text operations such as highlighed text replacement in paragraphs.
 
 ## Installation
 Clone this repository:
